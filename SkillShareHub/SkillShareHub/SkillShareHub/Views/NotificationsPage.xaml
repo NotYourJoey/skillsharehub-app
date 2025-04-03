@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:SkillShareHub.ViewModels"
+             x:Class="SkillShareHub.Views.NotificationsPage"
+             Title="Notifications">
+
+    <ContentPage.BindingContext>
+        <vm:NotificationsViewModel />
+    </ContentPage.BindingContext>
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Mark All as Read" Command="{Binding MarkAllAsReadCommand}" />
+    </ContentPage.ToolbarItems>
+
+    <ContentPage.Content>
+        <Grid>
+            <RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsBusy}">
+                <CollectionView ItemsSource="{Binding Notifications}"
+                              SelectionMode="None"
+                              EmptyView="No notifications yet.">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Padding="15,10">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:NotificationsViewModel}}, Path=NotificationTappedCommand}"
+                                                         CommandParameter="{Binding}" />
+                                </Grid.GestureRecognizers>
+
+                                <Frame Padding="15,10" HasShadow="False" 
+                                      BackgroundColor="{Binding IsRead, Converter={StaticResource BoolToColorConverter}, ConverterParameter='White,#F0F9FF'}">
+                                    <Grid RowDefinitions="Auto,Auto" ColumnDefinitions="*,Auto">
+                                        <!-- Message -->
+                                        <Label Grid.Row="0" Grid.Column="0"
+                                             Text="{Binding Message}"
+                                             FontAttributes="{Binding IsRead, Converter={StaticResource BoolToFontAttributesConverter}}"
+                                             FontSize="16" />
+
+                                        <!-- Timestamp -->
+                                        <Label Grid.Row="1" Grid.Column="0"
+                                             Text="{Binding CreatedAt, Converter={StaticResource DateTimeToTimeAgoConverter}}"
+                                             TextColor="#999999"
+                                             FontSize="12" />
+
+                                        <!-- Read/Unread indicator -->
+                                        <Frame Grid.Row="0" Grid.RowSpan="2" Grid.Column="1"
+                                             IsVisible="{Binding IsRead, Converter={StaticResource InverseBoolConverter}}"
+                                             BackgroundColor="#3897F0"
+                                             CornerRadius="6"
+                                             HeightRequest="12" WidthRequest="12"
+                                             Padding="0" HasShadow="False"
+                                             VerticalOptions="Start" HorizontalOptions="End"
+                                             Margin="0,5,0,0" />
+                                    </Grid>
+                                </Frame>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </RefreshView>
+
+            <!-- Activity Indicator -->
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                             IsVisible="{Binding IsBusy}"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center" />
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

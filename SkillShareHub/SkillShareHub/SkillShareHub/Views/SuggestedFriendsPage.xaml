@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:SkillShareHub.ViewModels"
+             x:Class="SkillShareHub.Views.SuggestedFriendsPage"
+             Title="Suggested Friends">
+
+    <ContentPage.BindingContext>
+        <vm:SuggestedFriendsViewModel />
+    </ContentPage.BindingContext>
+
+    <ContentPage.Content>
+        <Grid>
+            <RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsBusy}">
+                <CollectionView ItemsSource="{Binding SuggestedFriends}"
+                              SelectionMode="None"
+                              EmptyView="No suggested friends at the moment.">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Padding="15,10" ColumnDefinitions="50,*,Auto">
+                                <!-- Profile Image -->
+                                <Frame Grid.Column="0"
+                                     HasShadow="False"
+                                     Padding="0"
+                                     CornerRadius="25"
+                                     HeightRequest="50"
+                                     WidthRequest="50"
+                                     IsClippedToBounds="True">
+                                    <Image Source="{Binding ProfilePhotoUrl}"
+                                         Aspect="AspectFill">
+                                        <Image.GestureRecognizers>
+                                            <TapGestureRecognizer 
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type vm:SuggestedFriendsViewModel}}, Path=UserSelectedCommand}"
+                                                CommandParameter="{Binding .}" />
+                                        </Image.GestureRecognizers>
+                                    </Image>
+                                </Frame>
+
+                                <!-- User Info -->
+                                <StackLayout Grid.Column="1" VerticalOptions="Center">
+                                    <Label Text="{Binding Username}"
+                                         FontAttributes="Bold"
+                                         FontSize="16" />
+                                    <Label Text="{Binding Skills}"
+                                         LineBreakMode="TailTruncation"
+                                         MaxLines="1"
+                                         TextColor="#666666"
+                                         FontSize="14" />
+                                </StackLayout>
+
+                                <!-- Add Friend Button -->
+                                <Button Grid.Column="2"
+                                      Text="Add Friend"
+                                      BackgroundColor="#3897F0"
+                                      TextColor="White"
+                                      CornerRadius="8"
+                                      Command="{Binding Source={RelativeSource AncestorType={x:Type vm:SuggestedFriendsViewModel}}, Path=SendRequestCommand}"
+                                      CommandParameter="{Binding .}" />
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </RefreshView>
+
+            <!-- Activity Indicator -->
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                             IsVisible="{Binding IsBusy}"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center" />
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

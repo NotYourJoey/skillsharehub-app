@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:SkillShareHub.ViewModels"
+             x:Class="SkillShareHub.Views.SearchPage"
+             Title="Search">
+
+    <ContentPage.BindingContext>
+        <vm:SearchViewModel />
+    </ContentPage.BindingContext>
+
+    <ContentPage.Content>
+        <Grid RowDefinitions="Auto,Auto,*">
+            <!-- Search bar -->
+            <Grid Grid.Row="0" ColumnDefinitions="*,Auto" Padding="15,10">
+                <Frame Grid.Column="0" BorderColor="#DDDDDD" HasShadow="False" Padding="15,0" CornerRadius="20">
+                    <Grid ColumnDefinitions="*,Auto">
+                        <Entry Grid.Column="0" Placeholder="Search for users..." Text="{Binding SearchQuery}" ReturnCommand="{Binding SearchCommand}" />
+                        <ImageButton Grid.Column="1" Source="close_icon.png" Command="{Binding ClearSearchCommand}" BackgroundColor="Transparent" IsVisible="{Binding SearchQuery, Converter={StaticResource StringToBoolConverter}}" />
+                    </Grid>
+                </Frame>
+                <Button Grid.Column="1" Text="Search" Command="{Binding SearchCommand}" BackgroundColor="#3897F0" TextColor="White" CornerRadius="20" Margin="5,0,0,0" />
+            </Grid>
+
+            <!-- Skill categories -->
+            <ScrollView Grid.Row="1" Orientation="Horizontal" Padding="15,0,15,10" IsVisible="{Binding IsSearching, Converter={StaticResource InverseBoolConverter}}">
+                <StackLayout Orientation="Horizontal" Spacing="10" BindableLayout.ItemsSource="{Binding PopularSkills}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <Button Text="{Binding .}" 
+                                    BackgroundColor="{Binding ., Converter={StaticResource StringEqualityConverter}, ConverterParameter={Binding SelectedSkill, Source={RelativeSource AncestorType={x:Type vm:SearchViewModel}}}}"
+                                    TextColor="White"
+                                    CornerRadius="15" 
+                                    Padding="15,7"
+                                    BorderColor="#DDDDDD"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:SearchViewModel}}, Path=SkillSelectedCommand}"
+                                    CommandParameter="{Binding .}" />
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </StackLayout>
+            </ScrollView>
+
+            <!-- Search results -->
+            <Grid Grid.Row="2">
+                <CollectionView ItemsSource="{Binding SearchResults}"
+                              SelectionMode="None"
+                              EmptyView="Search for users by name or skill.">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Padding="15,10">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:SearchViewModel}}, Path=UserSelectedCommand}"
+                                                         CommandParameter="{Binding}" />
+                                </Grid.GestureRecognizers>
+
+                                <Grid ColumnDefinitions="50,*" ColumnSpacing="15">
+                                    <!-- Profile Image -->
+                                    <Frame Grid.Column="0"
+                                         HasShadow="False"
+                                         Padding="0"
+                                         CornerRadius="25"
+                                         HeightRequest="50" WidthRequest="50"
+                                         IsClippedToBounds="True"
+                                         VerticalOptions="Center">
+                                        <Image Source="{Binding ProfilePhotoUrl}" Aspect="AspectFill" />
+                                    </Frame>
+
+                                    <!-- User Info -->
+                                    <StackLayout Grid.Column="1" VerticalOptions="Center">
+                                        <Label Text="{Binding Username}" FontAttributes="Bold" FontSize="16" />
+                                        <Label Text="{Binding Skills}" LineBreakMode="TailTruncation" MaxLines="1" TextColor="#666666" FontSize="14" />
+                                    </StackLayout>
+                                </Grid>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <!-- Activity Indicator -->
+                <ActivityIndicator IsRunning="{Binding IsSearching}"
+                                 IsVisible="{Binding IsSearching}"
+                                 HorizontalOptions="Center"
+                                 VerticalOptions="Center" />
+            </Grid>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

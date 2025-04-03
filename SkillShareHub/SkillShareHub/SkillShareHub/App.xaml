@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Application xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:conv="clr-namespace:SkillShareHub.Converters"
+             x:Class="SkillShareHub.App">
+    <Application.Resources>
+        <ResourceDictionary>
+            <!-- Converters -->
+            <conv:StringToBoolConverter x:Key="StringToBoolConverter" />
+            <conv:InverseBoolConverter x:Key="InverseBoolConverter" />
+            <conv:PasswordVisibilityConverter x:Key="PasswordVisibilityConverter" />
+            <conv:IntToBoolConverter x:Key="IntToBoolConverter" />
+            <conv:LikeIconConverter x:Key="LikeIconConverter" />
+            <conv:BoolToColorConverter x:Key="BoolToColorConverter" />
+            <conv:DateTimeToTimeAgoConverter x:Key="DateTimeToTimeAgoConverter" />
+            <conv:ImageSourceConverter x:Key="ImageSourceConverter" />
+            <conv:IsCurrentUserConverter x:Key="IsCurrentUserConverter" />
+            <conv:SkillsToListConverter x:Key="SkillsToListConverter" />
+            <conv:MediaTypeToVisibilityConverter x:Key="MediaTypeToVisibilityConverter" />
+            <conv:FileSizeConverter x:Key="FileSizeConverter" />
+
+            <!-- Colors -->
+            <Color x:Key="PrimaryColor">#3897F0</Color>
+            <Color x:Key="SecondaryColor">#FAFAFA</Color>
+            <Color x:Key="TextColor">#333333</Color>
+            <Color x:Key="LightTextColor">#999999</Color>
+            <Color x:Key="BorderColor">#DDDDDD</Color>
+            <Color x:Key="ErrorColor">#ED4956</Color>
+
+            <!-- Styles -->
+            <Style TargetType="Label">
+                <Setter Property="TextColor" Value="{StaticResource TextColor}" />
+            </Style>
+
+            <Style TargetType="Button">
+                <Setter Property="BackgroundColor" Value="{StaticResource PrimaryColor}" />
+                <Setter Property="TextColor" Value="White" />
+                <Setter Property="CornerRadius" Value="8" />
+            </Style>
+
+            <Style TargetType="Entry">
+                <Setter Property="TextColor" Value="{StaticResource TextColor}" />
+            </Style>
+
+            <Style TargetType="Frame">
+                <Setter Property="BorderColor" Value="{StaticResource BorderColor}" />
+                <Setter Property="HasShadow" Value="False" />
+                <Setter Property="CornerRadius" Value="8" />
+            </Style>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>

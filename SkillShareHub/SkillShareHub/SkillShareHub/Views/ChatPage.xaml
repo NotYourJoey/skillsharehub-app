@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:SkillShareHub.ViewModels"
+             x:Class="SkillShareHub.Views.ChatPage"
+             Title="{Binding User.Username}">
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Profile" Command="{Binding ViewProfileCommand}" />
+    </ContentPage.ToolbarItems>
+
+    <ContentPage.Content>
+        <Grid RowDefinitions="*, Auto">
+            <!-- Messages -->
+            <RefreshView Grid.Row="0" Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsBusy}">
+                <CollectionView ItemsSource="{Binding Messages}"
+                              SelectionMode="None"
+                              EmptyView="No messages yet. Start a conversation!"
+                              ItemsUpdatingScrollMode="KeepLastItemInView">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Padding="10,5">
+                                <Frame Padding="10"
+                                     HasShadow="False"
+                                     BackgroundColor="{Binding IsSender, Converter={StaticResource BoolToColorConverter}, ConverterParameter='#3897F0,#F0F0F0'}"
+                                     BorderColor="{Binding IsSender, Converter={StaticResource BoolToColorConverter}, ConverterParameter='#3897F0,#DDDDDD'}"
+                                     CornerRadius="15"
+                                     HorizontalOptions="{Binding IsSender, Converter={StaticResource BoolToLayoutOptionsConverter}}"
+                                     WidthRequest="{OnPlatform iOS=280, Android=280, UWP=320}">
+                                    <StackLayout>
+                                        <Label Text="{Binding Content}"
+                                             TextColor="{Binding IsSender, Converter={StaticResource BoolToColorConverter}, ConverterParameter='White,#333333'}"
+                                             FontSize="16" />
+                                        <Label Text="{Binding CreatedAt, Converter={StaticResource DateTimeToTimeAgoConverter}}"
+                                             TextColor="{Binding IsSender, Converter={StaticResource BoolToColorConverter}, ConverterParameter='#E0E0FF,#999999'}"
+                                             FontSize="12"
+                                             HorizontalOptions="End" />
+                                    </StackLayout>
+                                </Frame>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </RefreshView>
+
+            <!-- Message input -->
+            <Grid Grid.Row="1" ColumnDefinitions="*, Auto" Padding="10" BackgroundColor="White">
+                <Frame Grid.Column="0" BorderColor="#DDDDDD" HasShadow="False" Padding="15,0" CornerRadius="20">
+                    <Entry Placeholder="Type a message..." Text="{Binding NewMessage}" />
+                </Frame>
+                <Button Grid.Column="1" Text="Send" 
+                        Command="{Binding SendMessageCommand}" 
+                        BackgroundColor="#3897F0"
+                        TextColor="White"
+                        CornerRadius="20"
+                        HeightRequest="40"
+                        Margin="5,0,0,0" />
+            </Grid>
+
+            <!-- Activity Indicator -->
+            <ActivityIndicator Grid.RowSpan="2" IsRunning="{Binding IsBusy}"
+                             IsVisible="{Binding IsBusy}"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center" />
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

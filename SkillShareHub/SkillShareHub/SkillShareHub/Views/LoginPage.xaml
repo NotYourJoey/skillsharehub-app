@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:SkillShareHub.ViewModels"
+             x:Class="SkillShareHub.Views.LoginPage"
+             BackgroundColor="White"
+             NavigationPage.HasNavigationBar="False">
+
+    <ContentPage.BindingContext>
+        <vm:LoginViewModel />
+    </ContentPage.BindingContext>
+
+    <ContentPage.Content>
+        <ScrollView>
+            <StackLayout Padding="30,0" Spacing="25" VerticalOptions="Center">
+                <!-- Logo or app name -->
+                <Image Source="skillsharelogo.png" HeightRequest="300" HorizontalOptions="Center" Margin="0,0,0,20" />
+
+                <Label Text="Skill Share Hub" FontSize="28" TextColor="#333333" HorizontalOptions="Center" FontAttributes="Bold" />
+
+                <!-- Error message (if any) -->
+                <Label Text="{Binding ErrorMessage}" IsVisible="{Binding ErrorMessage, Converter={StaticResource StringToBoolConverter}}"
+                       TextColor="Red" FontSize="14" HorizontalOptions="Center" />
+
+                <!-- Email entry -->
+                <Frame Padding="1" HasShadow="False" BorderColor="#DDDDDD" CornerRadius="8">
+                    <StackLayout Orientation="Horizontal" Padding="15,5">
+                        <Image Source="email_icon.png" WidthRequest="25" HeightRequest="20" VerticalOptions="Center" />
+                        <Entry Placeholder="Email or Username" Text="{Binding Email}" 
+                               FontSize="16" PlaceholderColor="#AAAAAA" VerticalOptions="Center"
+                               Keyboard="Email" />
+                    </StackLayout>
+                </Frame>
+
+                <!-- Password entry with toggle visibility -->
+                <Frame Padding="0" HasShadow="False" BorderColor="#DDDDDD" CornerRadius="8">
+                    <Grid Padding="15,5" ColumnDefinitions="Auto,*,Auto">
+                        <Image Grid.Column="0" Source="password_icon.png" WidthRequest="20" HeightRequest="20" VerticalOptions="Center" />
+                        <Entry Grid.Column="1" Placeholder="Password" Text="{Binding Password}" 
+                               FontSize="16" PlaceholderColor="#AAAAAA" VerticalOptions="Center"
+                               IsPassword="{Binding IsPasswordVisible, Converter={StaticResource InverseBoolConverter}}" />
+                        <ImageButton Grid.Column="2" Command="{Binding TogglePasswordVisibilityCommand}"
+                                    Source="{Binding IsPasswordVisible, Converter={StaticResource PasswordVisibilityConverter}}"
+                                    BackgroundColor="Transparent" WidthRequest="20" HeightRequest="20" />
+                    </Grid>
+                </Frame>
+
+                <!-- Forgot password link -->
+                <Label Text="Forgot your password?" TextColor="#999999" FontSize="14" 
+                       HorizontalOptions="End" TextDecorations="Underline">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Command="{Binding ForgotPasswordCommand}" />
+                    </Label.GestureRecognizers>
+                </Label>
+
+                <!-- Login button -->
+                <Button Text="Log In" Command="{Binding LoginCommand}" 
+                        BackgroundColor="DeepSkyBlue" TextColor="White" FontAttributes="Bold"
+                        CornerRadius="8" HeightRequest="50" FontSize="16" />
+
+                <!-- Activity indicator -->
+                <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" 
+                                  Color="DarkBlue" HorizontalOptions="Center" />
+
+                <!-- Sign up section -->
+                <StackLayout Orientation="Horizontal" HorizontalOptions="Center" Margin="0,20,0,0">
+                    <Label Text="Don't have an account?" TextColor="#333333" FontSize="14" VerticalOptions="Center" />
+                    <Label Text="Sign up" TextColor="#3897F0" FontSize="14" FontAttributes="Bold" VerticalOptions="Center">
+                        <Label.GestureRecognizers>
+                            <TapGestureRecognizer Command="{Binding RegisterCommand}" />
+                        </Label.GestureRecognizers>
+                    </Label>
+                </StackLayout>
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

@@ -1,0 +1,158 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:SkillShareHub.ViewModels"
+             x:Class="SkillShareHub.Views.FriendRequestsPage"
+             Title="Friend Requests">
+
+    <ContentPage.BindingContext>
+        <vm:FriendRequestsViewModel />
+    </ContentPage.BindingContext>
+
+    <ContentPage.Content>
+        <Grid RowDefinitions="Auto,*">
+            <!-- Segment Control -->
+            <Grid Grid.Row="0" ColumnDefinitions="*,*" Padding="15">
+                <Button Grid.Column="0" 
+                        Text="Received" 
+                        BackgroundColor="{Binding IsReceivedSelected, Converter={StaticResource BoolToColorConverter}, ConverterParameter='#3897F0,#E0E0E0'}"
+                        TextColor="{Binding IsReceivedSelected, Converter={StaticResource BoolToColorConverter}, ConverterParameter='White,#333333'}"
+                        Command="{Binding ToggleViewCommand}"
+                        CommandParameter="received"
+                        CornerRadius="8" />
+
+                <Button Grid.Column="1" 
+                        Text="Sent" 
+                        BackgroundColor="{Binding IsSentSelected, Converter={StaticResource BoolToColorConverter}, ConverterParameter='#3897F0,#E0E0E0'}"
+                        TextColor="{Binding IsSentSelected, Converter={StaticResource BoolToColorConverter}, ConverterParameter='White,#333333'}"
+                        Command="{Binding ToggleViewCommand}"
+                        CommandParameter="sent"
+                        CornerRadius="8" />
+            </Grid>
+
+            <!-- Content -->
+            <Grid Grid.Row="1">
+                <!-- Received Requests -->
+                <RefreshView IsVisible="{Binding IsReceivedSelected}"
+                           Command="{Binding RefreshCommand}"
+                           IsRefreshing="{Binding IsBusy}">
+                    <CollectionView ItemsSource="{Binding ReceivedRequests}"
+                                  SelectionMode="None"
+                                  EmptyView="No friend requests received.">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Padding="15,10" ColumnDefinitions="50,*,Auto,Auto">
+                                    <!-- Profile Image -->
+                                    <Frame Grid.Column="0"
+                                         HasShadow="False"
+                                         Padding="0"
+                                         CornerRadius="25"
+                                         HeightRequest="50"
+                                         WidthRequest="50"
+                                         IsClippedToBounds="True">
+                                        <Image Source="{Binding User.ProfilePhotoUrl}"
+                                             Aspect="AspectFill">
+                                            <Image.GestureRecognizers>
+                                                <TapGestureRecognizer 
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:FriendRequestsViewModel}}, Path=UserSelectedCommand}"
+                                                    CommandParameter="{Binding User}" />
+                                            </Image.GestureRecognizers>
+                                        </Image>
+                                    </Frame>
+
+                                    <!-- User Info -->
+                                    <StackLayout Grid.Column="1" VerticalOptions="Center">
+                                        <Label Text="{Binding User.Username}"
+                                             FontAttributes="Bold"
+                                             FontSize="16" />
+                                        <Label Text="{Binding User.FullName}"
+                                             TextColor="#666666"
+                                             FontSize="14" />
+                                    </StackLayout>
+
+                                    <!-- Accept Button -->
+                                    <Button Grid.Column="2"
+                                          Text="Accept"
+                                          BackgroundColor="#3897F0"
+                                          TextColor="White"
+                                          CornerRadius="8"
+                                          Command="{Binding Source={RelativeSource AncestorType={x:Type vm:FriendRequestsViewModel}}, Path=AcceptRequestCommand}"
+                                          CommandParameter="{Binding .}"
+                                          Margin="5,0" />
+
+                                    <!-- Reject Button -->
+                                    <Button Grid.Column="3"
+                                          Text="Reject"
+                                          BackgroundColor="#ED4956"
+                                          TextColor="White"
+                                          CornerRadius="8"
+                                          Command="{Binding Source={RelativeSource AncestorType={x:Type vm:FriendRequestsViewModel}}, Path=RejectRequestCommand}"
+                                          CommandParameter="{Binding .}" />
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </RefreshView>
+
+                <!-- Sent Requests -->
+                <RefreshView IsVisible="{Binding IsSentSelected}"
+                           Command="{Binding RefreshCommand}"
+                           IsRefreshing="{Binding IsBusy}">
+                    <CollectionView ItemsSource="{Binding SentRequests}"
+                                  SelectionMode="None"
+                                  EmptyView="You haven't sent any friend requests.">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <Grid Padding="15,10" ColumnDefinitions="50,*,Auto">
+                                    <!-- Profile Image -->
+                                    <Frame Grid.Column="0"
+                                         HasShadow="False"
+                                         Padding="0"
+                                         CornerRadius="25"
+                                         HeightRequest="50"
+                                         WidthRequest="50"
+                                         IsClippedToBounds="True">
+                                        <Image Source="{Binding User.ProfilePhotoUrl}"
+                                             Aspect="AspectFill">
+                                            <Image.GestureRecognizers>
+                                                <TapGestureRecognizer 
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:FriendRequestsViewModel}}, Path=UserSelectedCommand}"
+                                                    CommandParameter="{Binding User}" />
+                                            </Image.GestureRecognizers>
+                                        </Image>
+                                    </Frame>
+
+                                    <!-- User Info -->
+                                    <StackLayout Grid.Column="1" VerticalOptions="Center">
+                                        <Label Text="{Binding User.Username}"
+                                             FontAttributes="Bold"
+                                             FontSize="16" />
+                                        <Label Text="{Binding User.FullName}"
+                                             TextColor="#666666"
+                                             FontSize="14" />
+                                    </StackLayout>
+
+                                    <!-- Cancel Button -->
+                                    <Button Grid.Column="2"
+                                          Text="Cancel"
+                                          BackgroundColor="#ED4956"
+                                          TextColor="White"
+                                          CornerRadius="8"
+                                          Command="{Binding Source={RelativeSource AncestorType={x:Type vm:FriendRequestsViewModel}}, Path=CancelRequestCommand}"
+                                          CommandParameter="{Binding .}" />
+                                </Grid>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </RefreshView>
+            </Grid>
+
+            <!-- Activity Indicator -->
+            <ActivityIndicator Grid.RowSpan="2"
+                             IsRunning="{Binding IsBusy}"
+                             IsVisible="{Binding IsBusy}"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center" />
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

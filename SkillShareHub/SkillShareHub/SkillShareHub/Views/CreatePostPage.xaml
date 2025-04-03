@@ -1,0 +1,83 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:SkillShareHub.ViewModels"
+             x:Class="SkillShareHub.Views.CreatePostPage"
+             Title="Create Post">
+
+    <ContentPage.BindingContext>
+        <vm:CreatePostViewModel />
+    </ContentPage.BindingContext>
+
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Post" Command="{Binding CreatePostCommand}" Order="Primary" Priority="0" />
+        <ToolbarItem Text="Cancel" Command="{Binding CancelCommand}" Order="Primary" Priority="1" />
+    </ContentPage.ToolbarItems>
+
+    <ContentPage.Content>
+        <ScrollView>
+            <StackLayout Padding="20" Spacing="20">
+                <!-- User info -->
+                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                    <Frame Grid.Column="0" Padding="0" CornerRadius="20" IsClippedToBounds="True"
+                           HeightRequest="40" WidthRequest="40" HasShadow="False">
+                        <Image Source="default_profile.png" Aspect="AspectFill" />
+                    </Frame>
+                    <Label Grid.Column="1" Text="Username" VerticalOptions="Center" />
+                </Grid>
+
+                <!-- Post content -->
+                <Editor Placeholder="What skills would you like to share today?" 
+                        Text="{Binding Content}" HeightRequest="100" 
+                        AutoSize="TextChanges" />
+
+                <!-- Media preview -->
+                <Frame IsVisible="{Binding HasMedia}" Padding="0" HasShadow="False"
+                       BorderColor="#DDDDDD" CornerRadius="8" IsClippedToBounds="True"
+                       HeightRequest="200">
+                    <Grid>
+                        <Image Source="{Binding MediaSource}" Aspect="AspectFill" />
+                        <Button Text="✕" Command="{Binding RemoveMediaCommand}" 
+                                BackgroundColor="#80000000" TextColor="White"
+                                FontSize="16" WidthRequest="30" HeightRequest="30"
+                                CornerRadius="15" Padding="0"
+                                HorizontalOptions="End" VerticalOptions="Start"
+                                Margin="10" />
+                    </Grid>
+                </Frame>
+
+                <!-- Media options -->
+                <Frame Padding="15" BorderColor="#DDDDDD" HasShadow="False" CornerRadius="8">
+                    <StackLayout>
+                        <Label Text="Add to your post" FontAttributes="Bold" Margin="0,0,0,10" />
+                        <Grid ColumnDefinitions="*,*,*,*" ColumnSpacing="10">
+                            <Button Grid.Column="0" Text="📷" 
+                                    Command="{Binding PickPhotoCommand}"
+                                    BackgroundColor="#f2f2f2" TextColor="Black" 
+                                    CornerRadius="8" HeightRequest="50" />
+
+                            <Button Grid.Column="1" Text="📸" 
+                                    Command="{Binding TakePhotoCommand}"
+                                    BackgroundColor="#f2f2f2" TextColor="Black" 
+                                    CornerRadius="8" HeightRequest="50" />
+
+                            <Button Grid.Column="2" Text="🎬" 
+                                    Command="{Binding PickVideoCommand}"
+                                    BackgroundColor="#f2f2f2" TextColor="Black" 
+                                    CornerRadius="8" HeightRequest="50" />
+
+                            <Button Grid.Column="3" Text="📹" 
+                                    Command="{Binding TakeVideoCommand}"
+                                    BackgroundColor="#f2f2f2" TextColor="Black" 
+                                    CornerRadius="8" HeightRequest="50" />
+                        </Grid>
+                    </StackLayout>
+                </Frame>
+
+                <!-- Activity indicator -->
+                <ActivityIndicator IsRunning="{Binding IsBusy}" IsVisible="{Binding IsBusy}" 
+                                  Color="#3897F0" />
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:SkillShareHub.ViewModels"
+             xmlns:converters="clr-namespace:SkillShareHub.Converters"
+             xmlns:users="clr-namespace:SkillShareHub.Models"
+             x:Class="SkillShareHub.Views.HomePage"
+             x:DataType="vm:HomeViewModel"
+             Title="{Binding Title}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:StringToBoolConverter x:Key="StringToBoolConverter" />
+            <converters:LikeIconConverter x:Key="LikeIconConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ContentPage.Content>
+        <RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
+            <CollectionView ItemsSource="{Binding Posts}"
+                SelectionMode="None"
+                VerticalOptions="FillAndExpand"
+                EmptyView="No posts available. Add friends to see their posts.">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Margin="10,5" Padding="0" BorderColor="#DDDDDD" HasShadow="False" CornerRadius="10">
+                            <Grid Padding="0" RowSpacing="0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                    <RowDefinition Height="Auto" />
+                                </Grid.RowDefinitions>
+
+                                <!-- User header -->
+                                <Grid Grid.Row="0" Padding="10" ColumnSpacing="10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="40" />
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="Auto" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Profile image -->
+                                    <Frame Grid.Column="0" HeightRequest="40" WidthRequest="40" 
+                               CornerRadius="20" Padding="0" IsClippedToBounds="True">
+                                        <Image Source="{Binding User.ProfilePhotoUrl}" Aspect="AspectFill" />
+                                    </Frame>
+
+                                    <!-- Username -->
+                                    <Label Grid.Column="1" Text="{Binding User.Username}" 
+                               FontAttributes="Bold" VerticalOptions="Center" />
+
+                                    <!-- Options button -->
+                                    <Button Grid.Column="2" Text="⋮" BackgroundColor="Transparent" 
+                                TextColor="#333333" WidthRequest="40" 
+                                HeightRequest="40" CornerRadius="20" FontSize="20" />
+                                </Grid>
+
+                                <!-- Post image -->
+                                <Frame Grid.Row="1" Padding="0" IsClippedToBounds="True" 
+                           HasShadow="False" IsVisible="{Binding MediaUrl, Converter={StaticResource StringToBoolConverter}}">
+                                    <Image Source="{Binding MediaUrl}" Aspect="AspectFill" 
+                               HeightRequest="300" />
+                                </Frame>
+
+                                <!-- Action buttons -->
+                                <Grid Grid.Row="2" Padding="10">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="Auto" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Like button -->
+                                    <ImageButton Grid.Column="0" 
+                                     Source="{Binding IsLiked, Converter={StaticResource LikeIconConverter}}" 
+                                     BackgroundColor="Transparent" 
+                                     Command="{Binding Path=BindingContext.LikePostCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                     CommandParameter="{Binding .}"
+                                     WidthRequest="24" HeightRequest="24" Margin="0,0,15,0" />
+
+                                    <!-- Comment button -->
+                                    <ImageButton Grid.Column="1" Source="comment_icon.png" BackgroundColor="Transparent" 
+                                     Command="{Binding Path=BindingContext.CommentPostCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                     CommandParameter="{Binding .}"
+                                     WidthRequest="24" HeightRequest="24" />
+                                </Grid>
+
+                                <!-- Content and caption -->
+                                <StackLayout Grid.Row="3" Padding="10">
+                                    <!-- Likes count -->
+                                    <Label Text="{Binding LikesCount, StringFormat='{0} likes'}" 
+                               FontAttributes="Bold" Margin="0,0,0,5" />
+
+                                    <!-- Caption -->
+                                    <Label>
+                                        <Label.FormattedText>
+                                            <FormattedString>
+                                                <Span Text="{Binding User.Username}" FontAttributes="Bold" />
+                                                <Span Text=" " />
+                                                <Span Text="{Binding Content}" />
+                                            </FormattedString>
+                                        </Label.FormattedText>  
+                                    </Label>
+
+                                    <!-- Comments count -->
+                                    <Label Text="{Binding CommentsCount, StringFormat='View all {0} comments'}" 
+                               TextColor="#999999"
+                               IsVisible="{Binding CommentsCount, Converter={StaticResource IntToBoolConverter}}"
+                               Margin="0,5,0,0">
+                                        <Label.GestureRecognizers>
+                                            <TapGestureRecognizer 
+                                    Command="{Binding Path=BindingContext.PostSelectedCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                    CommandParameter="{Binding .}" />
+                                        </Label.GestureRecognizers>
+                                    </Label>
+
+                                    <!-- Timestamp -->
+                                    <Label Text="{Binding CreatedAt, StringFormat='{0:d MMMM}'}" 
+                               TextColor="#999999" 
+                               FontSize="Small" Margin="0,5,0,0" />
+                                </StackLayout>
+                            </Grid>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </RefreshView>
+    </ContentPage.Content>
+</ContentPage>

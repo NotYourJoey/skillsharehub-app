@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<Shell xmlns="http://xamarin.com/schemas/2014/forms" 
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:views="clr-namespace:SkillShareHub.Views"
+       x:Class="SkillShareHub.AppShell"       
+       Title="SkillShareHub">
+
+    <Shell.Resources>
+        <ResourceDictionary>
+            <Style x:Key="BaseStyle" TargetType="Element">
+                <Setter Property="Shell.BackgroundColor" Value="White" />
+                <Setter Property="Shell.ForegroundColor" Value="#333333" />
+                <Setter Property="Shell.TitleColor" Value="#333333" />
+                <Setter Property="Shell.DisabledColor" Value="#B4B4B4" />
+                <Setter Property="Shell.UnselectedColor" Value="#999999" />
+                <Setter Property="Shell.TabBarBackgroundColor" Value="White" />
+                <Setter Property="Shell.TabBarForegroundColor" Value="#3897F0" />
+                <Setter Property="Shell.TabBarUnselectedColor" Value="#999999" />
+                <Setter Property="Shell.TabBarTitleColor" Value="#3897F0" />
+            </Style>
+
+            <Style TargetType="TabBar" BasedOn="{StaticResource BaseStyle}" />
+        </ResourceDictionary>
+    </Shell.Resources>
+
+    <!-- Bottom Tab Bar (Instagram-style) -->
+    <TabBar>
+        <!-- Home Tab -->
+        <Tab Title="Home" Icon="home_icon.png">
+            <ShellContent ContentTemplate="{DataTemplate views:HomePage}" />
+        </Tab>
+
+        <!-- Search Tab -->
+        <Tab Title="Search" Icon="search_icon.png">
+            <ShellContent ContentTemplate="{DataTemplate views:SearchPage}" />
+        </Tab>
+
+        <!-- Create Post Tab -->
+        <Tab Title="" Icon="add_post_icon.png">
+            <ShellContent ContentTemplate="{DataTemplate views:CreatePostPage}" />
+        </Tab>
+
+        <!-- Notifications Tab -->
+        <Tab Title="Notifications" Icon="notifications_icon.png">
+            <ShellContent ContentTemplate="{DataTemplate views:NotificationsPage}" />
+        </Tab>
+
+        <!-- Profile Tab -->
+        <Tab Title="Profile" Icon="profile_icon.png">
+            <ShellContent ContentTemplate="{DataTemplate views:ProfilePage}" />
+        </Tab>
+    </TabBar>
+
+    <!-- Register routes for non-tabbed pages -->
+    <ShellItem Route="login">
+        <ShellContent ContentTemplate="{DataTemplate views:LoginPage}" />
+    </ShellItem>
+
+    <ShellItem Route="register">
+        <ShellContent ContentTemplate="{DataTemplate views:RegisterPage}" />
+    </ShellItem>
+
+    <ShellItem Route="forgotpassword">
+        <ShellContent ContentTemplate="{DataTemplate views:ForgotPasswordPage}" />
+    </ShellItem>
+</Shell>

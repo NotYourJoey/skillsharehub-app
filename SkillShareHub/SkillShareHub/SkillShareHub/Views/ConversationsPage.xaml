@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:SkillShareHub.ViewModels"
+             x:Class="SkillShareHub.Views.ConversationsPage"
+             Title="Messages">
+
+    <ContentPage.BindingContext>
+        <vm:ConversationsViewModel />
+    </ContentPage.BindingContext>
+
+    <ContentPage.Content>
+        <Grid>
+            <RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsBusy}">
+                <CollectionView ItemsSource="{Binding Conversations}"
+                              SelectionMode="None"
+                              EmptyView="No conversations yet. Add friends to start messaging!">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Padding="15,10">
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={RelativeSource AncestorType={x:Type vm:ConversationsViewModel}}, Path=ConversationSelectedCommand}"
+                                                         CommandParameter="{Binding}" />
+                                </Grid.GestureRecognizers>
+
+                                <Grid ColumnDefinitions="50,*,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="15">
+                                    <!-- Profile Image -->
+                                    <Frame Grid.Column="0" Grid.RowSpan="2"
+                                         HasShadow="False"
+                                         Padding="0"
+                                         CornerRadius="25"
+                                         HeightRequest="50" WidthRequest="50"
+                                         IsClippedToBounds="True"
+                                         VerticalOptions="Center">
+                                        <Image Source="{Binding User.ProfilePhotoUrl}" Aspect="AspectFill" />
+                                    </Frame>
+
+                                    <!-- Username -->
+                                    <Label Grid.Column="1" Grid.Row="0"
+                                         Text="{Binding User.Username}"
+                                         FontAttributes="Bold"
+                                         FontSize="16" />
+
+                                    <!-- Last message -->
+                                    <Label Grid.Column="1" Grid.Row="1"
+                                         Text="{Binding LastMessage.Content}"
+                                         LineBreakMode="TailTruncation"
+                                         MaxLines="1"
+                                         TextColor="#666666"
+                                         FontSize="14" />
+
+                                    <!-- Timestamp -->
+                                    <Label Grid.Column="2" Grid.Row="0"
+                                         Text="{Binding LastMessage.CreatedAt, Converter={StaticResource DateTimeToTimeAgoConverter}}"
+                                         TextColor="#999999"
+                                         FontSize="12"
+                                         HorizontalOptions="End" />
+
+                                    <!-- Unread indicator -->
+                                    <Frame Grid.Column="2" Grid.Row="1"
+                                         IsVisible="{Binding UnreadCount, Converter={StaticResource IntToBoolConverter}}"
+                                         BackgroundColor="#3897F0"
+                                         CornerRadius="15"
+                                         HeightRequest="30" WidthRequest="30"
+                                         Padding="0" HasShadow="False"
+                                         HorizontalOptions="End"
+                                         VerticalOptions="Start">
+                                        <Label Text="{Binding UnreadCount}"
+                                             TextColor="White"
+                                             FontSize="12"
+                                             FontAttributes="Bold"
+                                             HorizontalOptions="Center"
+                                             VerticalOptions="Center" />
+                                    </Frame>
+                                </Grid>
+                            </Grid>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </RefreshView>
+
+            <!-- Activity Indicator -->
+            <ActivityIndicator IsRunning="{Binding IsBusy}"
+                             IsVisible="{Binding IsBusy}"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center" />
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

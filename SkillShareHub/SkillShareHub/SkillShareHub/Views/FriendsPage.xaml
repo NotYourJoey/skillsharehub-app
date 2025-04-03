@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:SkillShareHub.ViewModels"
+             x:Class="SkillShareHub.Views.FriendsPage"
+             Title="Friends">
+
+    <ContentPage.BindingContext>
+        <vm:FriendsViewModel />
+    </ContentPage.BindingContext>
+
+    <ContentPage.Content>
+        <Grid RowDefinitions="Auto,*">
+            <!-- Header with action buttons -->
+            <StackLayout Grid.Row="0" Orientation="Horizontal" Padding="15" Spacing="10">
+                <Button Text="Friend Requests" 
+                        Command="{Binding ViewFriendRequestsCommand}"
+                        BackgroundColor="#3897F0" 
+                        TextColor="White"
+                        CornerRadius="8"
+                        HorizontalOptions="FillAndExpand" />
+
+                <Button Text="Suggested" 
+                        Command="{Binding ViewSuggestedFriendsCommand}"
+                        BackgroundColor="#3897F0" 
+                        TextColor="White"
+                        CornerRadius="8"
+                        HorizontalOptions="FillAndExpand" />
+            </StackLayout>
+
+            <!-- Friends list -->
+            <RefreshView Grid.Row="1" Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsBusy}">
+                <CollectionView ItemsSource="{Binding Friends}"
+                              SelectionMode="None"
+                              EmptyView="You don't have any friends yet. Add some friends to connect!">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <SwipeView>
+                                <SwipeView.RightItems>
+                                    <SwipeItems>
+                                        <SwipeItem Text="Message"
+                                                 BackgroundColor="#3897F0"
+                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type vm:FriendsViewModel}}, Path=MessageFriendCommand}"
+                                                 CommandParameter="{Binding .}" />
+                                        <SwipeItem Text="Remove"
+                                                 BackgroundColor="#ED4956"
+                                                 Command="{Binding Source={RelativeSource AncestorType={x:Type vm:FriendsViewModel}}, Path=RemoveFriendCommand}"
+                                                 CommandParameter="{Binding .}" />
+                                    </SwipeItems>
+                                </SwipeView.RightItems>
+
+                                <Grid Padding="15,10" ColumnSpacing="15">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="50" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+
+                                    <!-- Profile Image -->
+                                    <Frame Grid.Column="0"
+                                         HasShadow="False"
+                                         Padding="0"
+                                         CornerRadius="25"
+                                         HeightRequest="50"
+                                         WidthRequest="50"
+                                         IsClippedToBounds="True">
+                                        <Image Source="{Binding User.ProfilePhotoUrl}"
+                                             Aspect="AspectFill">
+                                            <Image.GestureRecognizers>
+                                                <TapGestureRecognizer 
+                                                    Command="{Binding Source={RelativeSource AncestorType={x:Type vm:FriendsViewModel}}, Path=FriendSelectedCommand}"
+                                                    CommandParameter="{Binding .}" />
+                                            </Image.GestureRecognizers>
+                                        </Image>
+                                    </Frame>
+
+                                    <!-- User Info -->
+                                    <StackLayout Grid.Column="1" VerticalOptions="Center">
+                                        <Label Text="{Binding User.Username}"
+                                             FontAttributes="Bold"
+                                             FontSize="16" />
+                                        <Label Text="{Binding User.FullName}"
+                                             TextColor="#666666"
+                                             FontSize="14" />
+                                    </StackLayout>
+                                </Grid>
+                            </SwipeView>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </RefreshView>
+
+            <!-- Activity Indicator -->
+            <ActivityIndicator Grid.RowSpan="2"
+                             IsRunning="{Binding IsBusy}"
+                             IsVisible="{Binding IsBusy}"
+                             HorizontalOptions="Center"
+                             VerticalOptions="Center" />
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>
